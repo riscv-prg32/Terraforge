@@ -1,0 +1,15 @@
+{
+  "name": "TerraForge 32 assets",
+  "license": "CC0-1.0",
+  "copyright": "Original procedural pixel art and synthetic audio generated for this repository; no third-party game assets.",
+  "audio": [
+    {
+      "file": "wav/terraforge32_stereo_loop.wav",
+      "title": "TerraForge 32 original stereo loop",
+      "channels": 2,
+      "sample_rate_hz": 22050,
+      "license": "CC0-1.0",
+      "provenance": "Synthetic, clean-room generated in this repository; no samples or melodies from third-party works."
+    }
+  ]
+}
