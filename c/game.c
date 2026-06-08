@@ -58,6 +58,15 @@ static int passable_q8(int x,int y){
     return !cell_solid((x-PLAYER_R)>>8,(y-PLAYER_R)>>8) && !cell_solid((x+PLAYER_R)>>8,(y-PLAYER_R)>>8) && !cell_solid((x-PLAYER_R)>>8,(y+PLAYER_R)>>8) && !cell_solid((x+PLAYER_R)>>8,(y+PLAYER_R)>>8) && tx>=1 && ty>=1 && tx<WORLD_W-1 && ty<WORLD_H-1;
 }
 
+void *memcpy(void *dest, const void *src, size_t n) {
+    char *d = (char *)dest;
+    const char *s = (const char *)src;
+    while (n--) {
+        *d++ = *s++;
+    }
+    return dest;
+}
+
 static uint16_t shade_for(uint8_t tile,uint8_t side,int dist){
     uint16_t near = tf_tile_fg[tile < TF_TILE_COUNT ? tile : 0];
     uint16_t far = tf_tile_bg[tile < TF_TILE_COUNT ? tile : 0];
