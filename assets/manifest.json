@@ -2,6 +2,22 @@
   "name": "TerraForge 32 assets",
   "license": "CC0-1.0",
   "copyright": "Original procedural pixel art and synthetic audio generated for this repository; no third-party game assets.",
+  "images": [
+    {
+      "file": "icon.png",
+      "title": "TerraForge 32 store icon",
+      "source": "Derived from png/splash_320x200.png",
+      "license": "CC0-1.0",
+      "provenance": "Original clean-room splash art resized for CartridgeStore metadata."
+    },
+    {
+      "file": "screenshot.png",
+      "title": "TerraForge 32 store screenshot",
+      "source": "Copy of png/splash_320x200.png",
+      "license": "CC0-1.0",
+      "provenance": "Original clean-room splash art reused as the CartridgeStore screenshot."
+    }
+  ],
   "audio": [
     {
       "file": "wav/terraforge32_stereo_loop.wav",

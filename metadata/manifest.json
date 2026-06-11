@@ -1,0 +1,28 @@
+{
+  "abi": "prg32-metadata-1.0",
+  "id": "org.uniparthenope.prg32.terraforge32",
+  "title": "TerraForge 32 3D",
+  "version": "1.0.0",
+  "summary": "Original PRG32 first-person block cavern cartridge with portable ABI-table builds.",
+  "tags": [
+    "game",
+    "education",
+    "raycaster",
+    "riscv",
+    "prg32"
+  ],
+  "assets": {
+    "icon": "icon.png",
+    "splash": "screenshot.png"
+  },
+  "architectures": [
+    {
+      "id": "esp32c6",
+      "file": "terraforge32-esp32c6.prg32"
+    },
+    {
+      "id": "qemu",
+      "file": "terraforge32-qemu.prg32"
+    }
+  ]
+}
