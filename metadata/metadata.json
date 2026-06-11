@@ -1,0 +1,62 @@
+{
+  "abi": "prg32-metadata-1.0",
+  "id": "org.uniparthenope.prg32.terraforge32",
+  "title": "TerraForge 32 3D",
+  "version": "1.0.0",
+  "summary": "Original PRG32 first-person block cavern cartridge with portable ABI-table builds.",
+  "description": "TerraForge 32 3D is a clean-room educational PRG32 cartridge about first-person exploration in an original generated block cavern. It demonstrates fixed-point movement, 2.5D ray casting, billboard projection, compact procedural state, input handling, HUD drawing, and portable cartridge packaging.",
+  "authors": [
+    {
+      "name": "Raffaele Montella",
+      "affiliation": "UniParthenope"
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/riscv-prg32/Terraforge",
+  "repository": "https://github.com/riscv-prg32/Terraforge",
+  "tags": [
+    "game",
+    "education",
+    "raycaster",
+    "riscv",
+    "prg32"
+  ],
+  "created_at": "2026-06-11T00:00:00Z",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "runtime": {
+    "platform": "PRG32",
+    "isa": "RV32I",
+    "architecture": "esp32c6",
+    "architectures": [
+      {
+        "id": "esp32c6",
+        "label": "ESP32-C6 hardware",
+        "target": "esp32c6",
+        "display": "ili9341",
+        "isa": "RV32I"
+      },
+      {
+        "id": "qemu",
+        "label": "QEMU virtual screen",
+        "target": "esp32c3",
+        "display": "qemu-rgb",
+        "isa": "RV32I"
+      }
+    ]
+  },
+  "assets": {
+    "icon": {
+      "block": "ICON",
+      "mime": "image/png"
+    },
+    "screenshot": {
+      "block": "SCRN",
+      "mime": "image/png",
+      "optional": true
+    }
+  },
+  "colophon": {
+    "block": "COLO",
+    "abi": "prg32-colophon-1.0"
+  }
+}

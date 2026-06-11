@@ -54,6 +54,20 @@ Collision tests sample four points around the player radius. This prevents the p
 
 The cartridge draws a full-screen first-person view, minimap, particles, animated drones, HUD, and audio feedback while keeping all state in compact static arrays. It is intentionally CPU-visible and algorithmic rather than asset-heavy, which makes it a good PRG32 classroom example.
 
+## 9. Portable cartridge packaging
+
+The game now builds through `scripts/build.sh`, following the same portable
+cartridge flow used by DeviceDemo. Portable builds ask `prg32_game.py` for an
+ABI-table cartridge instead of resolving every runtime import against one
+firmware ELF. That keeps the classroom artifact easier to share across ESP32-C6
+hardware and QEMU targets while still allowing a legacy absolute-import build
+with `PRG32_PORTABLE=0` for older firmware.
+
+Metadata is kept in `metadata/` and attached after the raw cartridge is built.
+This separation is useful for teaching because students can inspect the runtime
+C source, the authored assets, and the store-facing catalog metadata as three
+related but distinct parts of the cartridge pipeline.
+
 
 ## Stereo soundtrack lesson
 

@@ -1,0 +1,49 @@
+{
+  "abi": "prg32-colophon-1.0",
+  "title": "TerraForge 32 3D",
+  "subtitle": "Original first-person block cavern",
+  "version": "1.0.0",
+  "release_date": "2026-06-11",
+  "developer": {
+    "name": "UniParthenope PRG32",
+    "url": "https://github.com/riscv-prg32/Terraforge"
+  },
+  "authors": [
+    {
+      "role": "project lead",
+      "name": "Raffaele Montella - UniParthenope"
+    }
+  ],
+  "license": "MIT",
+  "copyright": "Copyright 2026 UniParthenope PRG32 contributors",
+  "acknowledgements": [
+    "Original clean-room code, art, audio, and procedural content for PRG32 teaching."
+  ],
+  "controls": [
+    {
+      "input": "D-pad left/right",
+      "action": "Rotate the first-person camera"
+    },
+    {
+      "input": "D-pad up/down",
+      "action": "Move forward or backward"
+    },
+    {
+      "input": "A",
+      "action": "Dig the targeted block"
+    },
+    {
+      "input": "Down + A",
+      "action": "Place the selected inventory block"
+    },
+    {
+      "input": "B",
+      "action": "Run while moving or cycle the selected block"
+    },
+    {
+      "input": "START",
+      "action": "Restart the generated cavern"
+    }
+  ],
+  "start_prompt": "Recover four crystal relics before health reaches zero"
+}

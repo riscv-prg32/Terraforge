@@ -39,6 +39,10 @@ terraforge32/
 │   ├── include/                     # generated C headers consumed by game.c
 │   ├── generate_assets.py           # asset-regeneration entry point
 │   └── manifest.json                # licensing and provenance
+├── metadata/                        # CartridgeStore metadata blocks
+├── scripts/
+│   ├── build.sh                     # portable cartridge build
+│   └── pack-store-bundle.sh         # Store bundle packer
 ├── docs/
 │   ├── didactic_notes.md
 │   ├── copyright_cleanroom.md
@@ -48,26 +52,28 @@ terraforge32/
 
 ## Build
 
-From this repository, with PRG32 cloned next to it and the resident firmware already built:
+From this repository, with a PRG32 checkout that supports portable ABI-table
+cartridges cloned next to it:
 
 ```bash
-export PRG32_ROOT=../PRG32
-export BUILD_DIR=$PRG32_ROOT/build-esp32c6
-./tools/build_cartridge.sh
+export PRG32_ARCHITECTURE=esp32c6
+scripts/build.sh
 ```
 
-Equivalent direct command:
+The script writes `dist/terraforge32-esp32c6.prg32`. The default build is
+portable and is not tied to one firmware ELF. Build the QEMU variant with:
 
 ```bash
-python3 ../PRG32/tools/prg32_game.py build \
-  c/game.c \
-  --firmware-elf ../PRG32/build-esp32c6/PRG32.elf \
-  --entry-prefix terraforge32_c \
-  --name terraforge32 \
-  --out terraforge32.prg32
+export PRG32_ARCHITECTURE=qemu
+scripts/build.sh
 ```
 
-Upload with the standard PRG32 cartridge upload flow.
+`tools/build_cartridge.sh` remains as a compatibility wrapper around
+`scripts/build.sh`. For older firmware/tooling without portable cartridge
+support, set `PRG32_PORTABLE=0` and pass a firmware ELF path.
+
+Upload and publish use the same flow as DeviceDemo's portable branch; see
+`docs/build_and_release.md`.
 
 ## Capabilities exercised
 
