@@ -52,8 +52,7 @@ terraforge32/
 
 ## Build
 
-From this repository, with a PRG32 checkout that supports portable ABI-table
-cartridges cloned next to it:
+From this repository, with a current PRG32 `main` checkout cloned next to it:
 
 ```bash
 export PRG32_ARCHITECTURE=esp32c6
@@ -68,16 +67,15 @@ export PRG32_ARCHITECTURE=qemu
 scripts/build.sh
 ```
 
-`tools/build_cartridge.sh` remains as a compatibility wrapper around
-`scripts/build.sh`. For older firmware/tooling without portable cartridge
-support, set `PRG32_PORTABLE=0` and pass a firmware ELF path.
+`tools/build_cartridge.sh` remains as a wrapper around `scripts/build.sh`.
+Current PRG32 builds portable cartridges only.
 
 Upload and publish use the same flow as DeviceDemo's portable branch; see
 `docs/build_and_release.md`.
 
 ## Capabilities exercised
 
-TerraForge 32 3D deliberately stresses PRG32 subsystems: full-screen rectangle rasterization, fixed-point math, procedural block maps, ray casting, billboard projection, sprite/tile asset use, input edge detection, inventory state, particles, audio beeps/note sequences, stereo soundtrack scheduling, and compact didactic code organization.
+TerraForge 32 3D deliberately stresses PRG32 subsystems: full-screen rectangle rasterization, fixed-point math, procedural block maps, ray casting, billboard projection, sprite/tile asset use, input edge detection, inventory state, particles, portable timed-note sequences, stereo soundtrack scheduling, and compact didactic code organization.
 
 ## Teaching tutorial
 
@@ -92,6 +90,6 @@ Code is MIT. Original art/audio assets are CC0-1.0. See `LICENSE` and `assets/ma
 
 ## Stereo soundtrack
 
-`assets/wav/terraforge32_stereo_loop.wav` is an original 36-second stereo loop master, generated synthetically for this project and released as CC0-1.0 with the rest of the assets. The C cartridge also includes `assets/include/terraforge_music.h`, a compact left/right score used by the minimal PRG32 note/beep API so the soundtrack remains audible on mono setups.
+`assets/wav/terraforge32_stereo_loop.wav` is an original 36-second stereo loop master, generated synthetically for this project and released as CC0-1.0 with the rest of the assets. The C cartridge also includes `assets/include/terraforge_music.h`, a compact left/right score used by the portable PRG32 timed-note API so the soundtrack remains audible on mono setups.
 
 For full stereo on hardware, use PRG32 Audio Plus and convert/package the WAV or a derived tracker representation with the PRG32 audio tools (`prg32_audio_convert.py`, `wav2prg32sample.py`, and `prg32audio_pack.py`) into an AUDIO block. PRG32 documents mandatory mono I2S and optional stereo Audio Plus using two MAX98357A amplifier breakouts.

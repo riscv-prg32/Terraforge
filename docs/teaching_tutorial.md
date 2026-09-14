@@ -455,7 +455,7 @@ static void break_target(void) {
 
     world[h.ty][h.tx] = TILE_AIR;
     burst_cell(h.tx, h.ty, t);
-    prg32_audio_beep(t == TILE_CRYSTAL ? 1100 : 220, 30);
+    play_hz(2, t == TILE_CRYSTAL ? 1100 : 220, 30);
 }
 
 static void place_target(void) {
@@ -693,9 +693,9 @@ static void draw_hud(void) {
 3. Stage it in QEMU, adapting paths to the local PRG32 checkout:
 
    ```bash
-   python3 "$PRG32_REPO/tools/prg32_game.py" upload-qemu \
+   PYTHONPATH="$PRG32_REPO" python3 -m prg32 qemu upload \
      dist/terraforge32-qemu.prg32 \
-     --flash "$PRG32_REPO/build-qemu/flash_image.bin" \
+     --flash "$PRG32_REPO/build-qemu/qemu_flash.bin" \
      --partitions "$PRG32_REPO/partitions_prg32.csv"
    ```
 
@@ -709,7 +709,7 @@ static void draw_hud(void) {
 5. Upload to a board, adapting the URL to the classroom network:
 
    ```bash
-   python3 "$PRG32_REPO/tools/prg32_game.py" upload \
+   PYTHONPATH="$PRG32_REPO" python3 -m prg32 esp32c6 upload \
      dist/terraforge32-esp32c6.prg32 \
      --url http://192.168.4.1
    ```
@@ -730,16 +730,16 @@ export PRG32_ARCHITECTURE=qemu
 scripts/build.sh
 
 # These paths depend on the local PRG32 checkout.
-python3 "$PRG32_REPO/tools/prg32_game.py" upload-qemu \
+PYTHONPATH="$PRG32_REPO" python3 -m prg32 qemu upload \
   dist/terraforge32-qemu.prg32 \
-  --flash "$PRG32_REPO/build-qemu/flash_image.bin" \
+  --flash "$PRG32_REPO/build-qemu/qemu_flash.bin" \
   --partitions "$PRG32_REPO/partitions_prg32.csv"
 
 export PRG32_ARCHITECTURE=esp32c6
 scripts/build.sh
 
 # Replace the URL with the address shown by the classroom board.
-python3 "$PRG32_REPO/tools/prg32_game.py" upload \
+PYTHONPATH="$PRG32_REPO" python3 -m prg32 esp32c6 upload \
   dist/terraforge32-esp32c6.prg32 \
   --url http://192.168.4.1
 ```
@@ -774,7 +774,7 @@ python3 "$PRG32_REPO/tools/prg32_game.py" upload \
 5. Publish to the Cartridge Store when authorized:
 
    ```bash
-   python3 "$PRG32_REPO/tools/prg32_game.py" publish-bundle \
+   PYTHONPATH="$PRG32_REPO" python3 -m prg32 store publish-bundle \
      dist/terraforge32-store-bundle.zip \
      --store-url http://192.168.1.42:5080 \
      --token "$PRG32_STORE_TOKEN"
@@ -817,9 +817,9 @@ python3 "$PRG32_REPO/tools/prg32_game.py" upload \
 cp "$repo_dir/dist/terraforge32-esp32c6.prg32" "$stage_dir/terraforge32-esp32c6.prg32"
 cp "$repo_dir/dist/terraforge32-qemu.prg32" "$stage_dir/terraforge32-qemu.prg32"
 
-python3 "$prg32_repo/tools/prg32_game.py" pack-bundle \
+(cd "$prg32_repo" && python3 -m prg32 store pack-bundle \
   --manifest "$stage_dir/manifest.json" \
-  --out "$repo_dir/dist/terraforge32-store-bundle.zip"
+  --out "$repo_dir/dist/terraforge32-store-bundle.zip")
 ```
 
 ## Laboratory 12: final review and oral defense

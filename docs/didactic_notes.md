@@ -56,12 +56,12 @@ The cartridge draws a full-screen first-person view, minimap, particles, animate
 
 ## 9. Portable cartridge packaging
 
-The game now builds through `scripts/build.sh`, following the same portable
-cartridge flow used by DeviceDemo. Portable builds ask `prg32_game.py` for an
-ABI-table cartridge instead of resolving every runtime import against one
-firmware ELF. That keeps the classroom artifact easier to share across ESP32-C6
-hardware and QEMU targets while still allowing a legacy absolute-import build
-with `PRG32_PORTABLE=0` for older firmware.
+The game builds through `scripts/build.sh` using the current
+`python3 -m prg32 cartridge build --portable` workflow. ESP32-C6 and QEMU
+are built with explicit architecture values. Portable timed notes use MIDI
+pitch numbers, while the authored score keeps frequencies for students to
+compare with audio waveforms. The short start and relic melodies use
+`prg32_midi_note_t` sequences.
 
 Metadata is kept in `metadata/` and attached after the raw cartridge is built.
 This separation is useful for teaching because students can inspect the runtime

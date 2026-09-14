@@ -81,6 +81,22 @@ static uint16_t shade_for(uint8_t tile,uint8_t side,int dist){
 }
 
 
+/* Translate a tone frequency into the nearest MIDI note for the portable audio API. */
+static uint8_t midi_from_hz(uint32_t hz){
+    static const uint16_t semitone_hz[13]={262,277,294,311,330,349,370,392,415,440,466,494,523};
+    int octave=4;
+    while(hz<262 && octave>0){ hz*=2; octave--; }
+    while(hz>=523 && octave<8){ hz/=2; octave++; }
+    uint8_t semitone=0;
+    while(semitone<12 && hz>(uint32_t)(semitone_hz[semitone]+semitone_hz[semitone+1])/2u) semitone++;
+    return (uint8_t)(12*(octave+1)+semitone);
+}
+
+/* Play a timed note on the channel chosen for music or effects. */
+static void play_hz(uint8_t channel,uint32_t hz,uint32_t ms){
+    if(hz) prg32_audio_note(channel,PRG32_DEFAULT_INSTRUMENT_ID,midi_from_hz(hz),190,ms);
+}
+
 static void music_restart(void){ music_step=0; music_timer=1; }
 static void music_tick(void){
     if(game_state==2) return;
@@ -91,7 +107,7 @@ static void music_tick(void){
        the true stereo asset for PRG32 Audio Plus/AUDIO-block builds. */
     uint16_t hz=(m->pan_hint<128)?m->left_hz:m->right_hz;
     if((frame_no&32u) && m->right_hz) hz=m->right_hz;
-    if(hz) prg32_audio_beep(hz, 18);
+    play_hz(0,hz,18);
     music_timer=m->frames;
     music_step++; if(music_step>=TF_STEREO_SCORE_LEN) music_step=0;
 }
@@ -169,10 +185,10 @@ static void break_target(void){
     if(h.tile==TILE_AIR || h.dist>1536) return;
     uint8_t t=h.tile;
     inv[t]++;
-    if(t==TILE_CRYSTAL){ relics++; prg32_audio_play_notes(tf_melody_relic, sizeof(tf_melody_relic)/sizeof(tf_melody_relic[0])); }
+    if(t==TILE_CRYSTAL){ relics++; prg32_audio_notes(1,PRG32_DEFAULT_INSTRUMENT_ID,190,tf_melody_relic, sizeof(tf_melody_relic)/sizeof(tf_melody_relic[0])); }
     world[h.ty][h.tx]=TILE_AIR;
     burst_cell(h.tx,h.ty,t);
-    prg32_audio_beep(t==TILE_CRYSTAL?1100:(t==TILE_ORE?880:220), t==TILE_STONE?45:30);
+    play_hz(2,t==TILE_CRYSTAL?1100:(t==TILE_ORE?880:220), t==TILE_STONE?45:30);
 }
 static void place_target(void){
     rayhit_t h=cast_ray(player_angle);
@@ -182,7 +198,7 @@ static void place_target(void){
     if(tx<1||ty<1||tx>=WORLD_W-1||ty>=WORLD_H-1) return;
     if(cell_solid(tx,ty)) return;
     if(((player_x>>8)==tx) && ((player_y>>8)==ty)) return;
-    world[ty][tx]=selected; inv[selected]--; burst_cell(tx,ty,selected); prg32_audio_beep(392,28);
+    world[ty][tx]=selected; inv[selected]--; burst_cell(tx,ty,selected); play_hz(2,392,28);
 }
 static void cycle_selected(void){
     for(int k=0;k<12;k++){
@@ -206,7 +222,7 @@ static void update_bots(void){
         else bots[i].dir=wrap_angle(bots[i].dir + 8 + (int)(rnd()&15));
         if((frame_no + bots[i].phase)%43==0) bots[i].dir=wrap_angle(bots[i].dir + (int)(rnd()%7)-3);
         int ddx=(bots[i].x-player_x)>>8, ddy=(bots[i].y-player_y)>>8;
-        if(ddx*ddx+ddy*ddy<2 && (frame_no&15)==0 && health>0){ health--; prg32_audio_beep(90,50); }
+        if(ddx*ddx+ddy*ddy<2 && (frame_no&15)==0 && health>0){ health--; play_hz(2,90,50); }
     }
 }
 static void update_particles(void){
@@ -215,8 +231,8 @@ static void update_particles(void){
 static void floor_effects(void){
     int tx=player_x>>8, ty=player_y>>8;
     uint8_t f=floor_tile[ty][tx];
-    if(f==TILE_WATER && (frame_no&31)==0 && health<9){ health++; prg32_audio_beep(520,20); }
-    if(f==TILE_LAVA && (frame_no&7)==0 && health>0){ health--; prg32_audio_beep(80,30); }
+    if(f==TILE_WATER && (frame_no&31)==0 && health<9){ health++; play_hz(2,520,20); }
+    if(f==TILE_LAVA && (frame_no&7)==0 && health>0){ health--; play_hz(2,80,30); }
 }
 
 void terraforge32_c_init(void){
@@ -225,7 +241,7 @@ void terraforge32_c_init(void){
     for(int i=0;i<13;i++) inv[i]=0;
     inv[TILE_DIRT]=24; inv[TILE_STONE]=8; inv[TILE_WOOD]=8;
     for(int i=0;i<MAX_PARTICLES;i++) particles[i].life=0;
-    prg32_audio_play_notes(tf_melody_start, sizeof(tf_melody_start)/sizeof(tf_melody_start[0]));
+    prg32_audio_notes(1,PRG32_DEFAULT_INSTRUMENT_ID,190,tf_melody_start, sizeof(tf_melody_start)/sizeof(tf_melody_start[0]));
 }
 
 void terraforge32_c_update(void){
@@ -235,13 +251,13 @@ void terraforge32_c_update(void){
     if(input&PRG32_BTN_LEFT) player_angle=wrap_angle(player_angle-1);
     if(input&PRG32_BTN_RIGHT) player_angle=wrap_angle(player_angle+1);
     int speed=(input&PRG32_BTN_B)?22:14;
-    if(input&PRG32_BTN_UP){ try_move((cos32[player_angle]*speed)>>8,(sin32[player_angle]*speed)>>8); if((frame_no&31)==0) prg32_audio_beep(180,12); }
+    if(input&PRG32_BTN_UP){ try_move((cos32[player_angle]*speed)>>8,(sin32[player_angle]*speed)>>8); if((frame_no&31)==0) play_hz(2,180,12); }
     if((input&PRG32_BTN_DOWN) && !(input&PRG32_BTN_A)){ try_move(-(cos32[player_angle]*speed)>>8,-(sin32[player_angle]*speed)>>8); }
     if((press&PRG32_BTN_B) && !(input&PRG32_BTN_UP)) cycle_selected();
     if(press&PRG32_BTN_A){ if(input&PRG32_BTN_DOWN) place_target(); else break_target(); }
     update_bots(); update_particles(); floor_effects(); music_tick(); center_hit=cast_ray(player_angle);
-    if(health==0){ game_state=2; prg32_audio_beep(60,250); }
-    if(relics>=4){ game_state=1; prg32_audio_play_notes(tf_melody_relic, sizeof(tf_melody_relic)/sizeof(tf_melody_relic[0])); }
+    if(health==0){ game_state=2; play_hz(2,60,250); }
+    if(relics>=4){ game_state=1; prg32_audio_notes(1,PRG32_DEFAULT_INSTRUMENT_ID,190,tf_melody_relic, sizeof(tf_melody_relic)/sizeof(tf_melody_relic[0])); }
     day_q8=(uint16_t)((day_q8+1)&511); frame_no++;
 }
 

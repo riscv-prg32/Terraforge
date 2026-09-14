@@ -15,7 +15,7 @@ Use the repository scripts first:
 ./tools/build_cartridge.sh
 ```
 
-`static_check.sh` uses `tools/prg32_stub.h` and is intended to run without ESP-IDF. `build_cartridge.sh` requires `PRG32_ROOT` and `BUILD_DIR` to point to a built PRG32 firmware tree.
+`static_check.sh` uses `tools/prg32_stub.h` and is intended to run without ESP-IDF. `build_cartridge.sh` uses a current PRG32 checkout through `PRG32_REPO` or `PRG32_ROOT`; a firmware ELF is not required for portable cartridges.
 
 ## Source and assets
 
